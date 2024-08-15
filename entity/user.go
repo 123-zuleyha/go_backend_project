@@ -15,5 +15,5 @@ type User struct {
 	DeletedAt  time.Time `json:"deleted_at"`
 	UserType   UserType  `json:"user_type"`
 	UserTypeID int       `json:"user_type_id"`
-	Lessons    []Lesson  `json:"lesson"`
+	Lessons    []Lesson  `json:"lesson" gorm:many2many:"user_lessons;"`
 }
