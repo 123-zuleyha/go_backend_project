@@ -8,7 +8,7 @@ import (
 	"gorm.io/gorm"
 )
 
-var Db *gorm.DB_DATABASE
+var Db *gorm.DB
 
 func Connect() {
 	host := os.Getenv("DB_HOST")
