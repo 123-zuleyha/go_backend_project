@@ -2,13 +2,15 @@ package db
 
 import (
 	"fmt"
+	"log"
 	"os"
 
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
+	"gorm.io/gorm/logger"
 )
 
-var Db *gorm.DB
+var DB *gorm.DB
 
 func Connect() {
 	host := os.Getenv("DB_HOST")
@@ -21,9 +23,20 @@ func Connect() {
 
 	dsn := fmt.Sprintf("host:%s user=%s password=%s database=%s port=%s", host, user, password, database, port)
 
-	Db, err = gorm.Open(postgres.Open(dsn), &gorm.Config{})
+	DB, err = gorm.Open(postgres.Open(dsn), &gorm.Config{
+        Logger:logger.Default.LogModel(logger.Info),
+    
+
+	})
 	if err != nil {
-		panic("Failed to connect database")
+		log.Panic("Failed to connect database:%v", err)
 	}
+
+
+	//Modeller buraya eklenecek :)
+	if err :=DB.AutoMigrate(); err !=nil {
+		panic("Failed to migrate database")
+	}
+	fmt.Println("Connection to databse")
 
 }
