@@ -24,17 +24,14 @@ func Connect() {
 	dsn := fmt.Sprintf("host:%s user=%s password=%s database=%s port=%s", host, user, password, database, port)
 
 	DB, err = gorm.Open(postgres.Open(dsn), &gorm.Config{
-        Logger:logger.Default.LogModel(logger.Info),
-    
-
+		Logger: logger.Default.LogMode(logger.Info),
 	})
 	if err != nil {
 		log.Panic("Failed to connect database:%v", err)
 	}
 
-
 	//Modeller buraya eklenecek :)
-	if err :=DB.AutoMigrate(); err !=nil {
+	if err := DB.AutoMigrate(); err != nil {
 		panic("Failed to migrate database")
 	}
 	fmt.Println("Connection to databse")
