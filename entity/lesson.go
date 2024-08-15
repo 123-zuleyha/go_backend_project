@@ -1,14 +1,18 @@
 package entity
 
+import (
+	"time"
+)
+
 type Lesson struct {
-	ID
-	Name
-	Duration
-	Definition
-	CreatedAt
-	UpdatedAt
-	DeletedAt
-	UserTypeID
-	UserType
-	TeacherID
+	ID         int
+	Name       string
+	Duration   int
+	Definition string
+	CreatedAt  time.Time
+	UpdatedAt  time.Time
+	DeletedAt  time.Time
+	UserTypeID int
+	Teacher    user
+	TeacherID  int
 }
