@@ -5,14 +5,13 @@ import (
 )
 
 type Lesson struct {
-	ID         int
-	Name       string
-	Duration   int
-	Definition string
-	CreatedAt  time.Time
-	UpdatedAt  time.Time
-	DeletedAt  time.Time
-	UserTypeID int
-	Teacher    user
-	TeacherID  int
+	ID         int       `json:"id" gorm:"primary key"`
+	Name       string    `json:"name" validation:"required"`
+	LessonCode int       `json:"lesson_code" validation:"required"`
+	Definition string    `json:"definition"`
+	CreatedAt  time.Time `json:"created_at"`
+	UpdatedAt  time.Time `json:"updated_at"`
+	DeletedAt  time.Time `json:"deleted_at"`
+	Teacher    User      `json:"teacher" validation:"required"`
+	TeacherID  int       `json:"teacher_id" validation:"required"`
 }
