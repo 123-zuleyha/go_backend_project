@@ -1,50 +1,34 @@
-package db
+package main
 
-var DB *gorm.DB
+import (
+	"database/sql"
+	"fmt"
 
-func Connect() {
-	host := os.Getenv("DB_HOST")
-	user := os.Getenv("DB_USER")
-	password := os.Getenv("DB_PASSWORD")
-	database := os.Getenv("DB_DATABASE")
-	port := os.Getenv("DB_PORT")
-	var err error
-	dsn := fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%v sslmode=disable",
-		host,
-		user,
-		password,
-		database,
-		port,
-	)
+	_ "github.com/lib/pq"
+)
 
-	DB, err = gorm.Open(postgres.Open(dsn), &gorm.Config{
-		Logger: logger.Default.LogMode(logger.Info),
-	})
+const (
+	host     = "localhost"
+	port     = 5432
+	user     = "postgres"
+	password = "your-password"
+	dbname   = "calhounio_demo"
+)
 
+func main() {
+	psqlInfo := fmt.Sprintf("host=%s port=%d user=%s "+
+		"password=%s dbname=%s sslmode=disable",
+		host, port, user, password, dbname)
+	db, err := sql.Open("postgres", psqlInfo)
 	if err != nil {
-		log.Panicf("failed to connect database,err: %v", err)
+		panic(err)
+	}
+	defer db.Close()
+
+	err = db.Ping()
+	if err != nil {
+		panic(err)
 	}
 
-	if err := DB.AutoMigrate(
-		&entity.User{},
-		&entity.Answer{},
-		&entity.Quiz{},
-		&entity.Question{},
-		&entity.Lesson{},
-		&entity.Code{},
-		&entity.CodeAnswer{},
-		&entity.CodeSubmission{},
-		&entity.Choice{},
-		&entity.UserQuiz{},
-		&entity.UserAnswer{},
-		&entity.UserType{},
-	); err != nil {
-		panic("failed to migrate database")
-	}
-
-	fmt.Println("Connection Opened to Database")
-	if err := Seed(); err != nil {
-		fmt.Println("failed to seed database")
-	}
-	
+	fmt.Println("Successfully connected!")
 }
