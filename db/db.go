@@ -5,8 +5,10 @@ import (
 	"log"
 	"os"
 
+	"github.com/123-zuleyha/go_backend_project/seeders"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
+	"gorm.io/gorm/clause"
 	"gorm.io/gorm/logger"
 )
 
@@ -36,4 +38,23 @@ func Connect() {
 	}
 	fmt.Println("Connection to databse")
 
+}
+
+func Seed() error {
+	userTypeSeeder := seeders.UserTypeSeeder{}
+	userSeeder := seeders.UserSeeder{}
+
+	err := DB.Clauses(clause.OnConflict{
+		Columns:   []clause.Column{{Name: "id"}},
+		UpdateAll: true,
+	}).Create(userTypeSeeder.Run()).Error
+	if err != nil {
+		return err
+	}
+
+	err = DB.Clauses(clause.OnConflict{
+		Columns:   []clause.Column{{Name: "id"}},
+		UpdateAll: true,
+	}).Create(userSeeder.Run()).Error
+	return err
 }
