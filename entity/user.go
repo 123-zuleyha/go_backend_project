@@ -10,10 +10,11 @@ type User struct {
 	LastName   string    `json:"last_name" validation:"required"`
 	Password   string    `json:"password"`
 	Email      string    `json:"email"`
+	Username   string    `json:"username"`
 	CreatedAt  time.Time `json:"created_at"`
 	UpdatedAt  time.Time `json:"updated_at"`
 	DeletedAt  time.Time `json:"deleted_at"`
 	UserType   UserType  `json:"user_type"`
 	UserTypeID int       `json:"user_type_id"`
-	Lessons    []Lesson  `json:"lesson" gorm:many2many:"user_lessons;"`
+	Lessons    []Lesson  `json:"lessons" gorm:many2many:"user_lessons;"`
 }
