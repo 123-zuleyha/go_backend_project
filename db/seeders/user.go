@@ -1,7 +1,7 @@
 package seeders
 
 import (
-	entity "github.com/123-zuleyha/go_backend_project/entity"
+	entity "github.com/123-zuleyha/go_backend_project/db/entity"
 )
 
 type UserSeeder struct{}

@@ -5,7 +5,7 @@ import (
 	"log"
 	"os"
 
-	"github.com/123-zuleyha/go_backend_project/seeders"
+	"github.com/123-zuleyha/go_backend_project/db/seeders"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
