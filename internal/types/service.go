@@ -4,7 +4,7 @@ import (
 	"errors"
 
 	"github.com/123-zuleyha/go_backend_project/db/entity"
-		"github.com/123-zuleyha/go_backend_project/pkg/utils"
+	"github.com/123-zuleyha/go_backend_project/pkg/utils"
 )
 
 type UserTypeService struct {
@@ -49,5 +49,3 @@ func (s *UserTypeService) CreateUserType(userTypeDTO *CreateUserTypeRequest) (*e
 	return createdType, nil
 
 }
-
-
