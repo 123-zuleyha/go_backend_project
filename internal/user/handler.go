@@ -1,8 +1,9 @@
 package user
 
 import (
+	"github.com/123-zuleyha/go_backend_project/pkg/models"
 	"github.com/123-zuleyha/go_backend_project/pkg/utils"
-	"github.com/123-zuleyha/go_backend_project/pkg/utils/models"
+
 	"github.com/gofiber/fiber/v2"
 )
 
@@ -10,8 +11,8 @@ type UserHandler struct {
 	service UserService
 }
 
-func NewUserHnadler(service *UserService) *UserHandler {
-	return &UserHandler{service: *&service}
+func NewUserHandler(service *UserService) *UserHandler {
+	return &UserHandler{service: *service}
 }
 
 func (u *UserHandler) GetUsers(c *fiber.Ctx) error {
@@ -25,7 +26,6 @@ func (u *UserHandler) GetUsers(c *fiber.Ctx) error {
 		return err
 	}
 	return c.JSON(users)
-
 }
 
 func (u *UserHandler) GetUserByID(c *fiber.Ctx) error {
@@ -50,6 +50,7 @@ func (u *UserHandler) CreateUser(c *fiber.Ctx) error {
 		return err
 	}
 	return c.JSON(createdUser)
+
 }
 
 func (u *UserHandler) UpdateUser(c *fiber.Ctx) error {
@@ -58,6 +59,7 @@ func (u *UserHandler) UpdateUser(c *fiber.Ctx) error {
 	if err := c.BodyParser(p); err != nil {
 		return err
 	}
+
 	err := u.service.UpdateUser(p)
 	if err != nil {
 		return err
@@ -66,11 +68,16 @@ func (u *UserHandler) UpdateUser(c *fiber.Ctx) error {
 }
 
 func (u *UserHandler) DeleteUser(c *fiber.Ctx) error {
+	id := c.Params("id")
+
+	return u.service.DeleteUser(utils.StringToInt(id))
+}
+
+func (u *UserHandler) GetUserByEmail(c *fiber.Ctx) error {
 	email := c.Params("email")
 
 	user, err := u.service.GetUserByEmail(email)
 	if err != nil {
-
 		return err
 	}
 	return c.JSON(user)
@@ -85,13 +92,14 @@ func (u *UserHandler) GetUserByUsername(c *fiber.Ctx) error {
 	}
 	return c.JSON(user)
 }
+
 func (u *UserHandler) SetTeacher(c *fiber.Ctx) error {
 	userID, err := c.ParamsInt("userID")
 	if err != nil {
 		return err
 	}
 
-	return &u.service.SetTeacher(userID)
+	return u.service.SetTeacher(userID)
 }
 
 func (u *UserHandler) GetStudents(c *fiber.Ctx) error {
@@ -111,13 +119,11 @@ func (u *UserHandler) AddLessonToUser(c *fiber.Ctx) error {
 	if err != nil {
 		return err
 	}
-
 	err = u.service.AddLessonToUser(userID, lessonID)
 	if err != nil {
 		return err
 	}
-	return c.JSON(fiber.Map{
-		"message": "Ders kullanıcıya eklendi"})
+	return c.JSON(fiber.Map{"message": "Lesson added to user"})
 }
 
 func (u *UserHandler) RemoveLessonFromUser(c *fiber.Ctx) error {
@@ -125,18 +131,15 @@ func (u *UserHandler) RemoveLessonFromUser(c *fiber.Ctx) error {
 	if err != nil {
 		return err
 	}
-
 	lessonID, err := c.ParamsInt("lessonID")
 	if err != nil {
 		return err
 	}
-
 	err = u.service.RemoveLessonFromUser(userID, lessonID)
 	if err != nil {
 		return err
 	}
-	return c.JSON(fiber.Map{"message": "Ders kullanıcıdan silindi"})
-
+	return c.JSON(fiber.Map{"message": "Lesson removed from user"})
 }
 
 func (u *UserHandler) GetTeacher(c *fiber.Ctx) error {
@@ -153,7 +156,7 @@ func (u *UserHandler) GetTeacher(c *fiber.Ctx) error {
 }
 
 func (u *UserHandler) GetStudentsByTeacher(c *fiber.Ctx) error {
-	userID, err := c.Params("lessonID")
+	userID, err := c.ParamsInt("lessonID")
 	if err != nil {
 		return err
 	}
@@ -166,7 +169,6 @@ func (u *UserHandler) GetStudentsByTeacher(c *fiber.Ctx) error {
 
 func (u *UserHandler) GetUsersQuizzesByQuizID(c *fiber.Ctx) error {
 	quizID, err := c.ParamsInt("quizID")
-
 	if err != nil {
 		return err
 	}
