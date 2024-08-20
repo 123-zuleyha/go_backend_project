@@ -28,7 +28,7 @@ func (q *QuizHandler) CreateQuizzes(c *fiber.Ctx) error {
 	p := new(CreateQuizRequest)
 	if err := c.BodyParser(p); err != nil {
 		return err
-	}
+	}++
 
 	userID := c.Locals("user_id").(int)
 	quizzes, err := q.service.CreateQuizzes(p, userID)
