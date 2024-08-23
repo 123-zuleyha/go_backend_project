@@ -13,25 +13,23 @@ func NewUserTypeRepository(db *gorm.DB) *UserTypeRepository {
 	return &UserTypeRepository{DB: db}
 }
 
-
-func (r *UserTypeRepository) GetUserTypes(req *BaseRequest) ([]entity.UserType, error){
+func (r *UserTypeRepository) GetUserTypes(req *BaseRequest) ([]entity.UserType, error) {
 	var userTypes []entity.UserType
 	query := r.DB
 	if req.Limit != 0 {
 		query = query.Limit(req.Limit)
 	}
-	if req.Offset !=0 {
+	if req.Offset != 0 {
 		query = query.Offset(req.Offset)
 	}
 	err := query.Find(&userTypes).Error
-
 	if err != nil {
-		return nil , err 
+		return nil, err
 	}
-	return userTypes, nil 
+	return userTypes, nil
 }
 
-func (r *UserTypeRepository) CreateUserType(userTypeEntity * entity.UserType) (*entity.UserType, error){
-	err := r.DB.Create(&userTypeEntity).Error
-	return userTypeEntity, err 
+func (r *UserTypeRepository) CreateUserType(userTypeEntity *entity.UserType) (*entity.UserType, error) {
+	err := r.DB.Create(userTypeEntity).Error
+	return userTypeEntity, err
 }

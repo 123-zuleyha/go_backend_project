@@ -1,3 +1,5 @@
+version: '3.8'
+
 services:
   api:
     container_name: go_backend_api
@@ -6,24 +8,21 @@ services:
       dockerfile: Dockerfile
     ports:
       - "8081:8081"
-    environment:
-      DB_HOST: db
-      DB_USER: postgres
-      DB_PASSWORD: password
-      DB_DATABASE: go_backend
-      DB_PORT: 5432
+    env_file:
+      - .env
     depends_on:
       - db
+      - rabbitmq
     networks:
       - postgres_network
+    volumes:
+      - api_volume:/app
+
   db:
     container_name: go_backend_db
     image: postgres:latest
-    environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: password
-      POSTGRES_DB: go_backend
-      PGDATA: /data/postgres
+    env_file:
+      - .env
     volumes:
       - postgres:/data/postgres
     ports:
@@ -37,13 +36,27 @@ services:
       - 8080:80
     environment:
       PGADMIN_DEFAULT_EMAIL: yetkinzuleyha94@gmail.com
-      PGADMIN_DEFAULT_PASSWORD: admin
+      PGADMIN_DEFAULT_PASSWORD: 12345
     volumes:
       - pgadmin-data:/var/lib/pgadmin
     networks:
       - postgres_network
     depends_on:
       - db
+
+  rabbitmq:
+    container_name: go_backend_rabbitmq
+    image: rabbitmq:3-management
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+    volumes:
+      - rabbitmq-data:/var/lib/rabbitmq
+    networks:
+      - postgres_network
 
 networks:
   postgres_network:
@@ -53,3 +66,4 @@ volumes:
   pgadmin-data:
   postgres:
   api_volume:
+  rabbitmq-data:

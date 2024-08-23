@@ -1,6 +1,8 @@
 package types
 
-import "github.com/gofiber/fiber/v2"
+import (
+	"github.com/gofiber/fiber/v2"
+)
 
 type UserTypeHandler struct {
 	service UserTypeService

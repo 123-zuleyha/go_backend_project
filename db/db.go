@@ -21,23 +21,25 @@ func Connect() {
 	database := os.Getenv("DB_DATABASE")
 	port := os.Getenv("DB_PORT")
 
+	if host == "" || user == "" || password == "" || database == "" || port == "" {
+		log.Fatalf("One or more database environment variables are not set. Please check DB_HOST, DB_USER, DB_PASSWORD, DB_DATABASE, and DB_PORT.")
+	}
+
+	dsn := fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%s", host, user, password, database, port)
+
 	var err error
-
-	dsn := fmt.Sprintf("host:%s user=%s password=%s database=%s port=%s", host, user, password, database, port)
-
 	DB, err = gorm.Open(postgres.Open(dsn), &gorm.Config{
 		Logger: logger.Default.LogMode(logger.Info),
 	})
 	if err != nil {
-		log.Panic("Failed to connect database:%v", err)
+		log.Fatalf("Failed to connect database: %v", err)
 	}
 
-	//Modeller buraya eklenecek :)
+	// Modeller buraya eklenecek :)
 	if err := DB.AutoMigrate(); err != nil {
 		panic("Failed to migrate database")
 	}
-	fmt.Println("Connection to databse")
-
+	fmt.Println("Connection to database established successfully")
 }
 
 func Seed() error {
